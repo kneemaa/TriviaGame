@@ -1,0 +1,15 @@
+.hideOnLoad {
+	display: none;
+}
+#a:hover {
+	background-color: lightblue;
+}
+#b:hover {
+	background-color: lightgreen;
+}
+#c:hover {
+	background-color: lightcoral;
+}
+#d:hover {
+	background-color: linen;
+}
