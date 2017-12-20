@@ -1,69 +1,70 @@
 $(document).ready(function() {
-	var timeRemaining = 30;
-	var clockRunning = false;
-	var gameStarted = false;
+	var timeRemaining = 15;
 	var intervalId;
+	var response = "";
 	var questionNumber = 0;
-	/*var questions = {
-		firstQuestion: {
-			question: "Which letter?",
-			correctAnswer: "A",
-			firstWrongAnswer: "B",
-			secondWrongAnswer: "C",
-			thirdWrongAnswer: "D"},
-		secondQuestion: {
-			question: "NO Boy",
-			correctAnswer: "E",
-			firstWrongAnswer: "F",
-			secondWrongAnswer: "G",
-			thirdWrongAnswer: "H"}
-	}*/
-
+	var numberOfQuestions = 3;
+	var correctAnswers = 0;
+	var wrongAnswers = 0;
+	var image = "";
 	var questions = [
-	{
-		question: "Which letter?",
-		answers: {
-			a: "@",
-			b: "#",
-			c: "$",
-			d: "%"
+		{
+			question: "What tool did Tommy Pickles use to get out of the play pen?",
+			answers: {
+				a: "A Spatula",
+				b: "A Fork",
+				c: "A Hammer",
+				d: "A Screwdriver"
+			},
+			correctAnswer: "d",
+			GIF: "./assets/images/screwdriver.gif",
 		},
-		correctAnswer: 'b'
-	},
-	{
-		question: "NO Boy",
-		answers: {
-			a: '1',
-			b: '2',
-			c: '3',
-			d: '4'
+		{
+			question: "What did Stu, Tommy's Dad, do for a living?",
+			answers: {
+				a: "Toy Maker",
+				b: "Stay At Home Dad",
+				c: "Engineer",
+				d: "Lawyer"
+			},
+			correctAnswer: "a",
+			correctGIF: "",
+			wrongGIF: "",
 		},
-		correctAnswer: 'd'
+		{
+			question: "How many seasons of the Rugrats were there?",
+			answers: {
+				a: "3",
+				b: "7",
+				c: "10",
+				d: "12"
+			},
+			correctAnswer: "c",
+			correctGIF: "",
+			wrongGIF: ""
 		}
 	];
 
 	$(".button").click(function() {
 		startGame();
-		gameStarted = true;
 	});
 
 	function startGame(){
+		startTimer();
 		$(".startButton").css({'display': 'none'});
 		$(".hideOnLoad").css({"display":"block"});
-		askQuestions(questions);
+		askQuestions(questions, questionNumber);
 	};
 
-	function timer() {
+	function startTimer() {
 		intervalId = setInterval(decrement, 1000);
 		
 	};
 
 	function decrement() {
-		if (clockRunning === false) {
-			timeRemaining--;
-		}
+		timeRemaining--;
+
 		$(".clock").html("Time Left: " + timeRemaining);
-		console.log(timeRemaining);
 		if (timeRemaining <= 0) {
 			stop();
 			console.log("out of time");
@@ -72,31 +73,69 @@ $(document).ready(function() {
 
 	function stop() {
 		clearInterval(intervalId);
-		clockRunning = false;
+	};
+	function pause() {
+		clearInterval(intervalId);
+		setTimeout(startTimer,1000 * 3);
+		$(".answers").remove();
+		$(".question").empty();
 	};
 
-	// game logic here
 
-	function askQuestions(trivia) {
-		var output = [];
-		timer();
-		$(".question").html(trivia[questionNumber].question);
-		for (option in trivia[questionNumber].answers){
-			console.log(option);
-			$(".answerOptions").append("<div id='" + option + "' class='question' choice='" + option + "'>" + trivia[questionNumber].answers[option] + "</div>");
+	function askQuestions(trivia, currentQuestion) {
+		$(".question").html(trivia[currentQuestion].question);
+		for (option in trivia[currentQuestion].answers){
+			$(".answerOptions").append("<div id='" + option + "' class='answers' data-choice='" + option + "'>" + trivia[currentQuestion].answers[option] + "</div>");
 		}
+		var theCorrectAnswer = trivia[questionNumber].correctAnswer;
+		console.log(theCorrectAnswer);
+		$(".answers").click(function(){
+			response = $(this).attr("data-choice");
+
+			if (response === theCorrectAnswer) {
+				correctGuess();
+			} else {
+				incorrectGuess();
+			}
+		console.log(trivia[questionNumber].GIF);
+		image = "<img src=" + trivia[questionNumber].GIF + " alt='dog'></img>";
+
+		function postQuestionPrompt(){
+			pause();
+
+			$(".display").append(image);
+			
+		};
+
+		function correctGuess() {
+			questionNumber++;
+			correctAnswers++;
+			console.log("Correct");
+			postQuestionPrompt();
+			keepPlayingCheck();
+		};
+
+		function incorrectGuess() {
+			questionNumber ++;
+			wrongAnswers++;
+			console.log("Incorrect");
+			postQuestionPrompt();
+			keepPlayingCheck();
+		};
 		
-		/*function answerCheck(){
-			var response = $(this).attr("choice");
-			console.log($(this).attr("choice"));
-		};*/
-		$(".answerOptions").click(function(){
-			console.log($(this).attr("id"));
+		function keepPlayingCheck() {
+			if (questionNumber === numberOfQuestions) {
+				console.log("Game Over");
+				console.log(correctAnswers, wrongAnswers);
+			} else if (questionNumber < numberOfQuestions) {
+				askQuestions(questions, questionNumber);
+			}
+		};
+	
 		});
-		
-
-
 	};
+
+
 
 
 

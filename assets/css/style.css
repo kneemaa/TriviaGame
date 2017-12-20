@@ -13,3 +13,13 @@
 #d:hover {
 	background-color: linen;
 }
+.container {
+	margin-top: 25%;
+}
+.clock {
+	font-size: 40px;
+	font-weight: bold;
+}
+.triviaArea {
+	margin-top: 25px;
+}
