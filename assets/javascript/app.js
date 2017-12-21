@@ -3,7 +3,7 @@ $(document).ready(function() {
 	var intervalId;
 	var response = "";
 	var questionNumber = 0;
-	var numberOfQuestions = 3;
+	var numberOfQuestions = 5;
 	var correctAnswers = 0;
 	var wrongAnswers = 0;
 	var image = "";
@@ -44,6 +44,30 @@ $(document).ready(function() {
 			correctAnswer: "c",
 			message: "There were 10 seasons of the Rugrats.",
 			GIF: "./assets/images/tv.gif"
+		},
+		{
+			question: "What was the name of dinasaur the Rugrats loved?",
+			answers: {
+				a: "Reptar",
+				b: "Raptor",
+				c: "Reggie",
+				d: "Ralph"
+			},
+			correctAnswer: "a",
+			message: "Reptar! He even had his own movie!",
+			GIF: "./assets/images/reptar.gif"
+		},
+		{
+			question: "What was the name of Angelica's Doll?",
+			answers: {
+				a: "Samantha",
+				b: "Suzie",
+				c: "Cynthia",
+				d: "She didn't have a name"
+			},
+			correctAnswer: "c",
+			message: "Cynthia never left Angelica's side. Never.",
+			GIF: "./assets/images/cynthia.gif"
 		}
 	];
 
