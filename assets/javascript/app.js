@@ -28,8 +28,7 @@ $(document).ready(function() {
 				d: "Lawyer"
 			},
 			correctAnswer: "a",
-			correctGIF: "",
-			wrongGIF: "",
+			GIF: "./assets/images/screwdriver.gif",
 		},
 		{
 			question: "How many seasons of the Rugrats were there?",
@@ -40,8 +39,7 @@ $(document).ready(function() {
 				d: "12"
 			},
 			correctAnswer: "c",
-			correctGIF: "",
-			wrongGIF: ""
+			GIF: "./assets/images/screwdriver.gif"
 		}
 	];
 
@@ -53,11 +51,11 @@ $(document).ready(function() {
 		startTimer();
 		$(".startButton").css({'display': 'none'});
 		$(".hideOnLoad").css({"display":"block"});
-		askQuestions(questions, questionNumber);
 	};
 
 	function startTimer() {
 		intervalId = setInterval(decrement, 1000);
+		askQuestions(questions, questionNumber);
 		
 	};
 
@@ -83,27 +81,34 @@ $(document).ready(function() {
 
 
 	function askQuestions(trivia, currentQuestion) {
+		console.log("i ran");
+		$(".gif").empty();
+		$(".display").hide();
+		$(".hideOnLoad").show();
 		$(".question").html(trivia[currentQuestion].question);
 		for (option in trivia[currentQuestion].answers){
 			$(".answerOptions").append("<div id='" + option + "' class='answers' data-choice='" + option + "'>" + trivia[currentQuestion].answers[option] + "</div>");
 		}
 		var theCorrectAnswer = trivia[questionNumber].correctAnswer;
 		console.log(theCorrectAnswer);
-		$(".answers").click(function(){
-			response = $(this).attr("data-choice");
-
-			if (response === theCorrectAnswer) {
-				correctGuess();
-			} else {
-				incorrectGuess();
-			}
 		console.log(trivia[questionNumber].GIF);
 		image = "<img src=" + trivia[questionNumber].GIF + " alt='dog'></img>";
+		$(".answers").click(function(){
+			response = $(this).attr("data-choice");
+			if (response === theCorrectAnswer) {
+				correctGuess();
+				$(".display").show();
+				$(".hideOnLoad").hide();
+				
+			} else {
+				$(".display").show();
+				$(".hideOnLoad").hide();
+				incorrectGuess();
+			}
+		});
 
 		function postQuestionPrompt(){
-			pause();
-
-			$(".display").append(image);
+			
 			
 		};
 
@@ -111,7 +116,7 @@ $(document).ready(function() {
 			questionNumber++;
 			correctAnswers++;
 			console.log("Correct");
-			postQuestionPrompt();
+			//postQuestionPrompt();
 			keepPlayingCheck();
 		};
 
@@ -119,26 +124,22 @@ $(document).ready(function() {
 			questionNumber ++;
 			wrongAnswers++;
 			console.log("Incorrect");
-			postQuestionPrompt();
+			//postQuestionPrompt();
 			keepPlayingCheck();
 		};
 		
 		function keepPlayingCheck() {
 			if (questionNumber === numberOfQuestions) {
+				stop();
+				$(".gif").html(image);
 				console.log("Game Over");
 				console.log(correctAnswers, wrongAnswers);
 			} else if (questionNumber < numberOfQuestions) {
-				askQuestions(questions, questionNumber);
+				pause();
+				$(".gif").html(image);
+				console.log("keep going");
 			}
 		};
-	
-		});
 	};
-
-
-
-
-
-
 
 });
