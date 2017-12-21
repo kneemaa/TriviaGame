@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	var timeRemaining = 15;
+	var timeRemaining = 30;
 	var intervalId;
 	var response = "";
 	var questionNumber = 0;
@@ -7,6 +7,7 @@ $(document).ready(function() {
 	var correctAnswers = 0;
 	var wrongAnswers = 0;
 	var image = "";
+	var rickRoll = '<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>'
 	var questions = [
 		{
 			question: "What tool did Tommy Pickles use to get out of the play pen?",
@@ -17,6 +18,7 @@ $(document).ready(function() {
 				d: "A Screwdriver"
 			},
 			correctAnswer: "d",
+			message: "Tommy used a toy screwdriver to escape the play pen.",
 			GIF: "./assets/images/screwdriver.gif",
 		},
 		{
@@ -28,7 +30,8 @@ $(document).ready(function() {
 				d: "Lawyer"
 			},
 			correctAnswer: "a",
-			GIF: "./assets/images/screwdriver.gif",
+			message: "Stu was a toy maker, not a very good one though.",
+			GIF: "./assets/images/stu.gif",
 		},
 		{
 			question: "How many seasons of the Rugrats were there?",
@@ -39,7 +42,8 @@ $(document).ready(function() {
 				d: "12"
 			},
 			correctAnswer: "c",
-			GIF: "./assets/images/screwdriver.gif"
+			message: "There were 10 seasons of the Rugrats.",
+			GIF: "./assets/images/tv.gif"
 		}
 	];
 
@@ -64,8 +68,7 @@ $(document).ready(function() {
 
 		$(".clock").html("Time Left: " + timeRemaining);
 		if (timeRemaining <= 0) {
-			stop();
-			console.log("out of time");
+			outOfTime();
 		}
 	};
 
@@ -78,68 +81,106 @@ $(document).ready(function() {
 		$(".answers").remove();
 		$(".question").empty();
 	};
+	
+	function outOfTime() {
+			$(".display").show();
+			$(".answers").empty();
+			endGame();
+	};
 
+	function endGame() {
+			$(".clock").html("Click Me to Restart.");
+			$(".clock").addClass("restart");
+			$(".display").show();
+			$(".gif").html(rickRoll);
+			$(".message").empty();
+			$(".question").empty();
+			$(".answerOptions").empty();
+			stop();
+			if (correctAnswers === wrongAnswers) {
+				$(".scoreBoard").append("It's A Tie!");
+			} else if (correctAnswers < wrongAnswers) {
+				$(".scoreBoard").append("<br>You Lost!");
+			} else if (correctAnswers > wrongAnswers) {
+				$(".scoreBoard").append("<br>You Won!");
+			}
+			$(".clock").click(function() { document.location.reload(true);})
+	};
 
 	function askQuestions(trivia, currentQuestion) {
-		console.log("i ran");
 		$(".gif").empty();
 		$(".display").hide();
-		$(".hideOnLoad").show();
+		$(".answerOptions").show();
 		$(".question").html(trivia[currentQuestion].question);
 		for (option in trivia[currentQuestion].answers){
 			$(".answerOptions").append("<div id='" + option + "' class='answers' data-choice='" + option + "'>" + trivia[currentQuestion].answers[option] + "</div>");
 		}
 		var theCorrectAnswer = trivia[questionNumber].correctAnswer;
-		console.log(theCorrectAnswer);
-		console.log(trivia[questionNumber].GIF);
 		image = "<img src=" + trivia[questionNumber].GIF + " alt='dog'></img>";
 		$(".answers").click(function(){
 			response = $(this).attr("data-choice");
 			if (response === theCorrectAnswer) {
 				correctGuess();
+				$(".message").html(trivia[currentQuestion].message);
 				$(".display").show();
-				$(".hideOnLoad").hide();
+				$(".answers").empty();
 				
 			} else {
+				$(".message").html(trivia[currentQuestion].message);
 				$(".display").show();
-				$(".hideOnLoad").hide();
+				$(".answers").empty();
 				incorrectGuess();
 			}
 		});
 
-		function postQuestionPrompt(){
-			
-			
-		};
+		function scoreBoard() {
+			$(".scoreBoard").html("Right: " + correctAnswers + " | Wrong: " + wrongAnswers);
+		}
 
 		function correctGuess() {
 			questionNumber++;
 			correctAnswers++;
-			console.log("Correct");
-			//postQuestionPrompt();
+			$(".gif").html(image);
+			scoreBoard()
+			function correctBackgroundReset() {
+				$("body").removeClass("resetBackground");
+				$("body").addClass("correctBackground");
+			};
+			correctBackgroundReset();
+			setTimeout(function() {
+				$("body").addClass("resetBackground");
+				$("body").removeClass("correctBackground");
+			},100);
 			keepPlayingCheck();
 		};
 
 		function incorrectGuess() {
 			questionNumber ++;
 			wrongAnswers++;
-			console.log("Incorrect");
-			//postQuestionPrompt();
+			scoreBoard()
+			$(".gif").html(image);
+			function wrongBackgroundReset() {
+				$("body").removeClass("resetBackground");
+				$("body").addClass("wrongBackground");
+			};
+			wrongBackgroundReset();
+			setTimeout(function() {
+				$("body").addClass("resetBackground");
+				$("body").removeClass("wrongBackground");
+			},100);
 			keepPlayingCheck();
 		};
-		
+
 		function keepPlayingCheck() {
 			if (questionNumber === numberOfQuestions) {
-				stop();
-				$(".gif").html(image);
-				console.log("Game Over");
-				console.log(correctAnswers, wrongAnswers);
+				$(".question").empty();
+				clearInterval(intervalId);
+				setTimeout(endGame,1000 * 3);
 			} else if (questionNumber < numberOfQuestions) {
 				pause();
-				$(".gif").html(image);
-				console.log("keep going");
 			}
 		};
+
 	};
 
 });

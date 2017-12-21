@@ -1,3 +1,6 @@
+img {
+	width: 393px;
+}
 .hideOnLoad {
 	display: none;
 }
@@ -13,13 +16,40 @@
 #d:hover {
 	background-color: linen;
 }
+.restart:hover {
+	background-color: grey;
+}
 .container {
-	margin-top: 25%;
+	margin-top: 10%;
 }
 .clock {
 	font-size: 40px;
+	margin-left: 50px;
+	width: 400px;
 	font-weight: bold;
 }
 .triviaArea {
 	margin-top: 25px;
+}
+.message, .question {
+	padding-bottom: 10px;
+	font-size: 18px;
+	font-style: italic;
+}
+.button {
+	margin-left: 110px;
+}
+.wrongBackground {
+	background-color: red;
+}
+.correctBackground {
+	background-color: green;
+}
+.resetBackground {
+	background-color: white;
+	transition: background-color 2s;
+}
+.scoreBoard {
+	font-size: 30px;
+	margin-left: 50px;
 }
