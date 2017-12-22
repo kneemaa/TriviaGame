@@ -8,6 +8,9 @@ $(document).ready(function() {
 	var wrongAnswers = 0;
 	var image = "";
 	var rickRoll = '<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>'
+	var clockTick = new Audio ('./assets/audio/clock-tick.wav');
+	var wrongBuzzer = new Audio ('./assets/audio/wrong.mp3');
+	var rightBuzzer = new Audio ('./assets/audio/right.mp3');
 	var questions = [
 		{
 			question: "What tool did Tommy Pickles use to get out of the play pen?",
@@ -89,7 +92,7 @@ $(document).ready(function() {
 
 	function decrement() {
 		timeRemaining--;
-
+		clockTick.play();
 		$(".clock").html("Time Left: " + timeRemaining);
 		if (timeRemaining <= 0) {
 			outOfTime();
@@ -125,8 +128,12 @@ $(document).ready(function() {
 				$(".scoreBoard").append("It's A Tie!");
 			} else if (correctAnswers < wrongAnswers) {
 				$(".scoreBoard").append("<br>You Lost!");
+				wrongBuzzer.play();
 			} else if (correctAnswers > wrongAnswers) {
 				$(".scoreBoard").append("<br>You Won!");
+				rightBuzzer.play();
+				rightBuzzer.play();
+				rightBuzzer.play();
 			}
 			$(".clock").click(function() { document.location.reload(true);})
 	};
@@ -164,6 +171,7 @@ $(document).ready(function() {
 		function correctGuess() {
 			questionNumber++;
 			correctAnswers++;
+			rightBuzzer.play();
 			$(".gif").html(image);
 			scoreBoard()
 			function correctBackgroundReset() {
@@ -181,6 +189,7 @@ $(document).ready(function() {
 		function incorrectGuess() {
 			questionNumber ++;
 			wrongAnswers++;
+			wrongBuzzer.play();
 			scoreBoard()
 			$(".gif").html(image);
 			function wrongBackgroundReset() {
